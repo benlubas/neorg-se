@@ -1,7 +1,8 @@
 # neorg-se
 
 > [!WARNING]
-> This is a Work in Progress. Nothing is working right now, I'm still experimenting with this idea.
+> This is a Work in Progress. Some things are working, but I'm still experimenting with this idea.
+> Everything is subject to change.
 
 Search text file content via the [Tantivy](https://github.com/quickwit-oss/tantivy) search engine,
 all within Neovim.
@@ -10,16 +11,20 @@ all within Neovim.
 
 ## Commands
 
-- `Neorg search fulltext` - Provide a prompt used to search document text (including headings)
-- `Neorg search headings` - Provide a prompt used to search for headings
+- `Neorg search index` - Create the search engine index for the current workspace. Must be run each
+time you launch nvim before you can run a query (WIP like I said)
+- `Neorg search query` - Provide a prompt used to search document titles and text
+
 
 ## Install
 
-Install this plugin and load it by adding this to your neorg config:
+Uhhhh... Maybe clone this one and build it yourself for now...
 
 ```lua
-["external.search"] = {},
+["external.search"] = {
+    config = {
+        -- will autodetect if you load the plugin correctly, and build the exe with cargo build and don't move it.
+        bin_path = "path/to/bin",
+    },
+},
 ```
-
-I'm not sure what the config will look like at this moment. Maybe a custom data directory? I'm just
-planning to use the neorg data directory wherever that may be.
