@@ -39,7 +39,9 @@ impl EventHandler {
         // data_path.
         let receiver = nvim.session.start_event_loop_channel();
 
-        let data_path = nvim.call_function("stdpath", vec![neovim_lib::Value::String("data".into())]).unwrap();
+        let data_path = nvim
+            .call_function("stdpath", vec![neovim_lib::Value::String("data".into())])
+            .unwrap();
         let data_path = data_path.as_str().unwrap();
         // let data_path = "~/.local/state/nvim/";
 
@@ -64,24 +66,28 @@ impl EventHandler {
                             Ok(results) => {
                                 info!("Query Success!");
 
-                                let str_results: Vec<&str> = results
+                                let str_results: Vec<String> = results
                                     .iter()
-                                    .filter_map(|r| {
+                                    .filter_map(|(score, r)| {
                                         if let Ok(field) =
                                             self.search_engine.schema.get_field("path")
                                         {
-                                            r.get_all(field).next().unwrap().as_str()
+                                            r.get_all(field)
+                                                .next()
+                                                .unwrap()
+                                                .as_str()
+                                                .map(|path| format!("[{score}, \"{path}\"]"))
                                         } else {
                                             None
                                         }
                                     })
                                     .collect();
-                                let query_results_str = str_results.join("\", \"");
+                                let query_results_str = str_results.join(",");
                                 // TODO: surely there is a better way to do sanitization than this
                                 let q = q.replace('\'', r"\'");
                                 let q = q.replace('"', r#"\""#);
                                 let luacall = format!(
-                                    "require('neorg_se').show_results('{q}', '[\"{query_results_str}\"]')"
+                                    "require('neorg_se').show_results('{q}', '[{query_results_str}]')"
                                 );
                                 info!("{luacall}");
                                 self.nvim

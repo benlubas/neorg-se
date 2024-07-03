@@ -157,7 +157,7 @@ impl SearchEngine {
         Ok(())
     }
 
-    pub fn query(&mut self, query_str: &str) -> anyhow::Result<Vec<TantivyDocument>> {
+    pub fn query(&mut self, query_str: &str) -> anyhow::Result<Vec<(f32, TantivyDocument)>> {
         self.aquire_reader()?;
         if let Some(reader) = &self.reader {
             // acquiring a searcher is cheap. One searcher should be used per user request.
@@ -174,12 +174,13 @@ impl SearchEngine {
 
             let query = query_parser.parse_query(query_str)?;
             let top_docs = searcher.search(&query, &TopDocs::with_limit(10))?;
-            let mut results: Vec<TantivyDocument> = vec![];
-            for (_score, doc_address) in top_docs {
+            let mut results: Vec<(f32, TantivyDocument)> = vec![];
+            for (score, doc_address) in top_docs {
                 let retrieved_doc: TantivyDocument = searcher.doc(doc_address)?;
                 let json = retrieved_doc.to_json(&self.schema);
-                info!("{}", json);
-                results.push(retrieved_doc);
+                info!("{score}: {}", json);
+
+                results.push((score, retrieved_doc));
             }
 
             return Ok(results);
