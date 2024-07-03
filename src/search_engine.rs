@@ -24,13 +24,14 @@ pub struct ParsedDocument {
 impl ParsedDocument {
     pub fn new(file_path: &str) -> io::Result<ParsedDocument> {
         let contents = fs::read_to_string(file_path)?;
+        let mut stripped_contents = contents.clone();
 
         static METADATA_RE: Lazy<Regex> =
-            Lazy::new(|| Regex::new(r"(?ms)\A\s*@document.meta\s*(.*?)@end\s*$").unwrap());
+            Lazy::new(|| Regex::new(r"(?ms)\A(\s*@document.meta\s*(.*?)@end\s*)$").unwrap());
 
         let mut title = "";
         let mut categories: Vec<String> = vec![];
-        if let Some((_, [metadata])) = METADATA_RE
+        if let Some((_, [full_meta_tag, metadata])) = METADATA_RE
             .captures_iter(&contents)
             .map(|c| c.extract())
             .next()
@@ -57,13 +58,15 @@ impl ParsedDocument {
                 .map(|s| s.to_string())
                 .collect();
             info!("{categories:?}");
+
+            stripped_contents = contents[full_meta_tag.len()..].to_string();
         }
 
         Ok(ParsedDocument {
             title: title.to_string(),
             categories,
             path: file_path.to_string(),
-            body: contents,
+            body: stripped_contents,
         })
     }
 }
