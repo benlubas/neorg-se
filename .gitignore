@@ -1,3 +1,7 @@
+.luarc.json
+.direnv/
+neorg-SE.log
+
 # Compiled Lua sources
 luac.out
 
