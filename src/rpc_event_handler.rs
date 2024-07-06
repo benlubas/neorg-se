@@ -6,8 +6,13 @@ use tantivy::schema::*;
 
 use crate::search_engine::SearchEngine;
 
-enum Messages {
-    Query,
+pub enum QueryType {
+    Fulltext,
+    Categories,
+}
+
+pub enum Messages {
+    Query(QueryType),
     Index,
     Unknown(String),
 }
@@ -16,7 +21,8 @@ impl From<String> for Messages {
     fn from(event: String) -> Self {
         match &event[..] {
             "index" => Messages::Index,
-            "query" => Messages::Query,
+            "query_fulltext" => Messages::Query(QueryType::Fulltext),
+            "query_categories" => Messages::Query(QueryType::Categories),
             _ => Messages::Unknown(event),
         }
     }
@@ -57,12 +63,12 @@ impl EventHandler {
     pub fn handle_events(&mut self) {
         for (event, values) in &self.receiver {
             match Messages::from(event) {
-                Messages::Query => {
+                Messages::Query(query_type) => {
                     info!("We got a query: {values:?}");
                     let queries: Vec<&str> = values.iter().filter_map(|v| v.as_str()).collect();
                     info!("queries: {queries:?}");
                     for q in queries {
-                        match self.search_engine.query(q) {
+                        match self.search_engine.query(&query_type, q) {
                             Ok(results) => {
                                 info!("Query Success!");
 

@@ -13,6 +13,8 @@ use tantivy::{Index, IndexWriter, ReloadPolicy};
 
 use std::fs;
 
+use crate::rpc_event_handler::QueryType;
+
 #[derive(Debug)]
 pub struct ParsedDocument {
     pub title: String,
@@ -122,7 +124,6 @@ impl SearchEngine {
                     let path = entry.path().to_string_lossy();
                     if let Ok(document) = ParsedDocument::new(&path) {
                         info!("Document: {document:?}");
-                        // TODO: add these documents to the index now.
                         let mut new_doc = tantivy::TantivyDocument::default();
                         new_doc.add_text(self.schema.get_field("title")?, document.title);
                         for cat in document.categories {
@@ -157,20 +158,27 @@ impl SearchEngine {
         Ok(())
     }
 
-    pub fn query(&mut self, query_str: &str) -> anyhow::Result<Vec<(f32, TantivyDocument)>> {
+    pub fn query(
+        &mut self,
+        query_type: &QueryType,
+        query_str: &str,
+    ) -> anyhow::Result<Vec<(f32, TantivyDocument)>> {
         self.aquire_reader()?;
         if let Some(reader) = &self.reader {
             // acquiring a searcher is cheap. One searcher should be used per user request.
             let searcher = reader.searcher();
 
-            // Search the title and body fields if the user doesn't specify
-            let query_parser = QueryParser::for_index(
-                self.index.as_ref().unwrap(),
-                vec![
+            let search_fields = match query_type {
+                QueryType::Fulltext => vec![
                     self.schema.get_field("title")?,
                     self.schema.get_field("body")?,
+                    self.schema.get_field("categories")?,
                 ],
-            );
+                QueryType::Categories => vec![self.schema.get_field("categories")?],
+            };
+
+            // Search the title and body fields if the user doesn't specify
+            let query_parser = QueryParser::for_index(self.index.as_ref().unwrap(), search_fields);
 
             let query = query_parser.parse_query(query_str)?;
             let top_docs = searcher.search(&query, &TopDocs::with_limit(10))?;

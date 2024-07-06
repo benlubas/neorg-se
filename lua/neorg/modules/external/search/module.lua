@@ -23,6 +23,8 @@ module.config.public = {
         .. "/target/"
         .. (DEBUG and "debug" or "release")
         .. "/neorg-se",
+
+    index_on_launch = true,
 }
 
 print("module.config.public.bin_path:", module.config.public.bin_path)
@@ -46,11 +48,20 @@ module.load = function()
             min_args = 0,
             max_args = 1,
             name = "search",
-            condition = "norg",
             subcommands = {
                 query = {
-                    min_args = 0,
+                    min_args = 1,
                     name = "search.query",
+                    subcommands = {
+                        fulltext = {
+                            name = "search.query.fulltext",
+                            min_args = 0,
+                        },
+                        categories = {
+                            name = "search.query.categories",
+                            min_args = 0,
+                        },
+                    },
                 },
                 index = {
                     args = 0,
@@ -59,8 +70,12 @@ module.load = function()
             },
         },
     })
-    ---@type core.dirman
-    dirman = module.required["core.dirman"]
+
+    dirman = module.required["core.dirman"] ---@type core.dirman
+
+    if module.config.public.index_on_launch then
+        module.private["search.index"]()
+    end
 end
 
 ---@class SearchResult
@@ -99,7 +114,8 @@ end
 
 module.events.subscribed = {
     ["core.neorgcmd"] = {
-        ["search.query"] = true,
+        ["search.query.fulltext"] = true,
+        ["search.query.categories"] = true,
         ["search.index"] = true,
     },
 }
@@ -110,26 +126,38 @@ module.on_event = function(event)
     end
 end
 
-module.private["search.query"] = function(event)
+module.private["search.query.fulltext"] = function(event)
     local query = event.content
     if not vim.tbl_isempty(query) then
         -- call a function with the query
-        module.private.notify_rpc("query", vim.iter(query):join(" "))
+        module.private.notify_rpc("query_fulltext", vim.iter(query):join(" "))
     else
         -- prompt for a query, ideally with telescope and live updates? I'm not sure how that will
         -- work... :/
         vim.schedule(function()
             vim.ui.input({ prompt = "Search Query:" }, function(text)
-                module.private.notify_rpc("query", text)
+                module.private.notify_rpc("query_fulltext", text)
+            end)
+        end)
+    end
+end
+
+module.private["search.query.categories"] = function(event)
+    local query = event.content
+    if not vim.tbl_isempty(query) then
+        module.private.notify_rpc("query_categories", vim.iter(query):join(" "))
+    else
+        vim.schedule(function()
+            vim.ui.input({ prompt = "Search Categories:" }, function(text)
+                module.private.notify_rpc("query_categories", text)
             end)
         end)
     end
 end
 
 module.private["search.index"] = function(_event)
-    print("index called")
     local ws = dirman.get_current_workspace()
-    P(ws[1], tostring(ws[2]))
+    -- P(ws[1], tostring(ws[2]))
     module.private.notify_rpc("index", ws[1], tostring(ws[2]))
 end
 
