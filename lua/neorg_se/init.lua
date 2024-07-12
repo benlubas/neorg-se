@@ -40,4 +40,11 @@ M.show_results = function(query, results_json)
     end
 end
 
+-- track indexed categories. Used as a completion source
+M.categories = {}
+
+M.set_categories = function(categories)
+    M.categories = categories
+end
+
 return M

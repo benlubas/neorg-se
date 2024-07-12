@@ -4,10 +4,13 @@ use once_cell::sync::Lazy;
 use regex::Regex;
 use std::io;
 use std::path::Path;
+use tantivy::aggregation::agg_req::Aggregations;
+use tantivy::aggregation::agg_result::AggregationResults;
+use tantivy::aggregation::{AggregationCollector, AggregationLimits};
 
 use log::{error, info};
 use tantivy::collector::TopDocs;
-use tantivy::query::QueryParser;
+use tantivy::query::{AllQuery, QueryParser};
 use tantivy::{schema::*, IndexReader};
 use tantivy::{Index, IndexWriter, ReloadPolicy};
 
@@ -48,7 +51,7 @@ impl ParsedDocument {
             }
 
             static CATEGORIES_RE: Lazy<Regex> = Lazy::new(|| {
-                Regex::new(r"categories:\s*\[((?s).*?)\]|categories:\s*(\w+)").unwrap()
+                Regex::new(r"categories:\s*\[((?s).*?)\]|(?m)categories:\s*(\w+)$").unwrap()
             });
             categories = CATEGORIES_RE
                 .captures_iter(metadata)
@@ -84,7 +87,18 @@ impl SearchEngine {
     pub fn new(data_path: String) -> SearchEngine {
         let mut schema_builder = Schema::builder();
         schema_builder.add_text_field("title", TEXT);
-        schema_builder.add_text_field("categories", TEXT);
+
+        // using this special type so we can run aggregation queries against this field
+        let text_fieldtype = TextOptions::default()
+            .set_indexing_options(
+                TextFieldIndexing::default()
+                    .set_index_option(IndexRecordOption::WithFreqs)
+                    .set_tokenizer("raw"),
+            )
+            .set_fast(None)
+            .set_stored();
+        schema_builder.add_text_field("categories", text_fieldtype);
+        // schema_builder.add_text_field("categories", TEXT); // this is how we used to add the categories field
         schema_builder.add_text_field("path", TEXT | STORED);
         schema_builder.add_text_field("body", TEXT);
         // TODO: Maybe search for an existing index at the data_path and read it if it exists?
@@ -195,5 +209,42 @@ impl SearchEngine {
         }
 
         Err(anyhow!("Failed to aquire reader"))
+    }
+
+    pub fn list_categories(&mut self) -> anyhow::Result<Vec<String>> {
+        self.aquire_reader()?;
+        info!("reader aquired");
+        if let Some(reader) = &self.reader {
+            info!("Aggregating");
+            let searcher = reader.searcher();
+            let agg_req: Aggregations = serde_json::from_value(serde_json::json!(
+                    {
+                      "category_counts": {
+                        "terms": {
+                          "field": "categories",
+                          "size": 1000
+                        }
+                      }
+                    }
+            ))?;
+            let collector = AggregationCollector::from_aggs(agg_req, Default::default());
+
+            let agg_res: AggregationResults = searcher.search(&AllQuery, &collector).unwrap();
+            let res: serde_json::Value = serde_json::to_value(agg_res)?;
+            info!("{res:?}");
+            let cats: Vec<String> = res
+                .get("category_counts")
+                .unwrap()
+                .get("buckets")
+                .unwrap()
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|value| value.get("key").unwrap().as_str().unwrap().to_string())
+                .collect();
+            Ok(cats)
+        } else {
+            Err(anyhow!("couldn't aquire reader"))
+        }
     }
 }

@@ -21,7 +21,7 @@ fn main() {
         WriteLogger::new(
             LevelFilter::Info,
             Config::default(),
-            File::create("neorg-SE.log").unwrap(),
+            File::create("/tmp/neorg-SE.log").unwrap(),
         ),
     ])
     .unwrap();

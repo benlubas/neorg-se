@@ -19,15 +19,13 @@ local module = modules.create("external.search")
 local DEBUG = true
 
 module.config.public = {
-    bin_path = vim.fn.fnamemodify(vim.api.nvim_get_runtime_file("lua/neorg_se.lua", false)[1], ":p:h:h")
+    bin_path = vim.fn.fnamemodify(vim.api.nvim_get_runtime_file("lua/neorg_se/init.lua", false)[1], ":p:h:h:h")
         .. "/target/"
         .. (DEBUG and "debug" or "release")
         .. "/neorg-se",
 
     index_on_launch = true,
 }
-
-print("module.config.public.bin_path:", module.config.public.bin_path)
 
 module.setup = function()
     return {
@@ -77,6 +75,13 @@ module.load = function()
         module.private["search.index"]()
     end
 end
+
+---@class external.search
+module.public = {
+    get_categories = function()
+        return require("neorg_se").categories
+    end
+}
 
 ---@class SearchResult
 ---@field file_path string absolute file path

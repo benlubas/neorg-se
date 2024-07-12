@@ -115,6 +115,23 @@ impl EventHandler {
                     match self.search_engine.index(ws_path, ws_name) {
                         Ok(_) => {
                             info!("[Index] Success");
+                            // set the categories
+                            if let Ok(cats) = self.search_engine.list_categories() {
+                                let cat_str = cats
+                                    .iter()
+                                    .map(|s| s.replace('"', "\\\""))
+                                    .collect::<Vec<String>>()
+                                    .join("\", \"");
+                                let luacall =
+                                    format!("require('neorg_se').set_categories({{ \"{cat_str}\" }})");
+                                info!("{luacall}");
+                                let res = self.nvim.call_function(
+                                    "luaeval",
+                                    vec![neovim_lib::Value::String(luacall.into())],
+                                );
+
+                                info!("result: {res:?}");
+                            }
                         }
                         Err(e) => {
                             error!("[Index] Failed with error: {e:?}");
