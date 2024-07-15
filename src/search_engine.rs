@@ -6,9 +6,9 @@ use std::io;
 use std::path::Path;
 use tantivy::aggregation::agg_req::Aggregations;
 use tantivy::aggregation::agg_result::AggregationResults;
-use tantivy::aggregation::{AggregationCollector, AggregationLimits};
+use tantivy::aggregation::AggregationCollector;
 
-use log::{error, info};
+use log::{error, info, warn};
 use tantivy::collector::TopDocs;
 use tantivy::query::{AllQuery, QueryParser};
 use tantivy::{schema::*, IndexReader};
@@ -16,13 +16,12 @@ use tantivy::{Index, IndexWriter, ReloadPolicy};
 
 use std::fs;
 
-use crate::rpc_event_handler::QueryType;
+use crate::QueryType;
 
 #[derive(Debug)]
 pub struct ParsedDocument {
     pub title: String,
     pub categories: Vec<String>,
-    pub path: String,
     pub body: String,
 }
 
@@ -70,7 +69,6 @@ impl ParsedDocument {
         Ok(ParsedDocument {
             title: title.to_string(),
             categories,
-            path: file_path.to_string(),
             body: stripped_contents,
         })
     }
@@ -112,14 +110,21 @@ impl SearchEngine {
 
     /// Take a workspaces of files, traverse, parse and add them to the index
     pub fn index(&mut self, ws_path: &str, ws_name: &str) -> tantivy::Result<()> {
-        let ws_data_path = self.data_path.to_string() + ws_name;
+        let ws_data_path = self.data_path.to_string() + "/" + ws_name + "/";
         // TODO: reuse existing index from disk potentially with cache?
         // Figure out how to determine which files need updating. Is it even a concern? Indexing is
         // very fast.
-        if std::path::Path::new(&ws_data_path).exists() {
-            let _ = fs::remove_dir_all(&ws_data_path);
+        if Path::new(&ws_data_path).exists() {
+            info!("path exists, removing it");
+            match fs::remove_dir_all(&ws_data_path) {
+                Ok(_) => info!("Removed path"),
+                Err(e) => warn!("Failed to remove path: {e:?}"),
+            }
         }
-        let _ = fs::create_dir_all(&ws_data_path);
+        match fs::create_dir(Path::new(&ws_data_path)) {
+            Ok(s) => info!("ok, {s:?}"),
+            Err(e) => warn!("not okay: {e:?}"),
+        }
         let index = Index::create_in_dir(ws_data_path, self.schema.clone())?;
         let mut index_writer: IndexWriter = index.writer(50_000_000)?;
 
@@ -153,6 +158,7 @@ impl SearchEngine {
         }
         index_writer.commit()?;
         self.index = Some(index);
+        self.aquire_reader()?;
 
         Ok(())
     }
@@ -173,11 +179,10 @@ impl SearchEngine {
     }
 
     pub fn query(
-        &mut self,
+        &self,
         query_type: &QueryType,
         query_str: &str,
     ) -> anyhow::Result<Vec<(f32, TantivyDocument)>> {
-        self.aquire_reader()?;
         if let Some(reader) = &self.reader {
             // acquiring a searcher is cheap. One searcher should be used per user request.
             let searcher = reader.searcher();
@@ -189,6 +194,14 @@ impl SearchEngine {
                     self.schema.get_field("categories")?,
                 ],
                 QueryType::Categories => vec![self.schema.get_field("categories")?],
+                QueryType::Unknown(s) => {
+                    if let Ok(field) = self.schema.get_field(s) {
+                        vec![field]
+                    } else {
+                        warn!("[QUERY] Invalid schema field passed: {s}");
+                        return Ok(vec![])
+                    }
+                }
             };
 
             // Search the title and body fields if the user doesn't specify
@@ -211,11 +224,9 @@ impl SearchEngine {
         Err(anyhow!("Failed to aquire reader"))
     }
 
-    pub fn list_categories(&mut self) -> anyhow::Result<Vec<String>> {
-        self.aquire_reader()?;
-        info!("reader aquired");
+    pub fn list_categories(&self) -> anyhow::Result<Vec<String>> {
         if let Some(reader) = &self.reader {
-            info!("Aggregating");
+            info!("[LIST CATS] Aggregating");
             let searcher = reader.searcher();
             let agg_req: Aggregations = serde_json::from_value(serde_json::json!(
                     {
@@ -231,7 +242,6 @@ impl SearchEngine {
 
             let agg_res: AggregationResults = searcher.search(&AllQuery, &collector).unwrap();
             let res: serde_json::Value = serde_json::to_value(agg_res)?;
-            info!("{res:?}");
             let cats: Vec<String> = res
                 .get("category_counts")
                 .unwrap()
@@ -244,7 +254,7 @@ impl SearchEngine {
                 .collect();
             Ok(cats)
         } else {
-            Err(anyhow!("couldn't aquire reader"))
+            Err(anyhow!("Never aquired tantivy reader"))
         }
     }
 }

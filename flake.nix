@@ -35,6 +35,7 @@
                 plugins = with pkgs; [
                   vimPlugins.neorg
                   lua51Packages.pathlib-nvim
+                  lua51Packages.nvim-nio
                   lua51Packages.telescope-nvim
                 ];
               };
@@ -49,6 +50,7 @@
             stylua
             nil
             lua5_1
+            libiconv-darwin # You only need this on Darwin systems
           ];
         };
       }
