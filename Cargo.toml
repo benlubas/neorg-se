@@ -6,7 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
+name = "neorg_se"
 crate-type = ["cdylib"]
+
+[features]
+luajit = ["mlua/luajit"]
+lua51 = ["mlua/lua51"]
 
 [dependencies]
 anyhow = "1.0.86"
@@ -15,7 +20,7 @@ dirs = "5.0.1"
 ignore = "0.4.22"
 log = "0.4.22"
 log-panics = "2.1.0"
-mlua = { version = "0.9.9", features = ["lua51", "module"] }
+mlua = { version = "0.9.9", features = ["module"] }
 neovim-lib = "0.6.1"
 once_cell = "1.19.0"
 regex = "1.10.5"
