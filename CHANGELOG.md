@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/benlubas/neorg-se/compare/v1.0.0...v1.0.1) (2024-07-15)
+
+
+### Bug Fixes
+
+* readme (this is just to trigger release please) ([b9deadd](https://github.com/benlubas/neorg-se/commit/b9deadd0b4a9410d4be7300beb720ff2fa32bed2))
+
 ## 1.0.0 (2024-07-15)
 
 
