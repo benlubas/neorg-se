@@ -11,12 +11,12 @@ description = {
 }
 
 source = {
-	url = "http://github.com/benlubas/neorg-se-ls/archive/v" .. MODREV .. ".zip",
+	url = "http://github.com/benlubas/neorg-se/archive/v" .. MODREV .. ".zip",
 }
 
 if MODREV == "scm" then
 	source = {
-		url = "git://github.com/benlubas/neorg-interim-ls",
+		url = "git://github.com/benlubas/neorg-se",
 	}
 end
 
