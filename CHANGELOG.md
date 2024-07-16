@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/benlubas/neorg-se/compare/v1.1.2...v1.1.3) (2024-07-16)
+
+
+### Bug Fixes
+
+* create module ([12b4002](https://github.com/benlubas/neorg-se/commit/12b40025321cbc2aaa6825548bed8d38c37b3904))
+
 ## [1.1.2](https://github.com/benlubas/neorg-se/compare/v1.1.1...v1.1.2) (2024-07-16)
 
 
