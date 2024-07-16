@@ -22,7 +22,7 @@ end
 
 dependencies = {
     "neorg ~> 8",
-    "lua == 5.1",
+    "lua >= 5.1",
     "luarocks-build-rust-mlua",
 }
 
@@ -33,11 +33,4 @@ build = {
         -- Native library expected in `<target_path>/release/libmy_module.so` (linux; uses right name on macos/windows)
         "neorg_se",
     },
-
-    install = {
-        lua = {
-            ["lua/neorg_se"] = "./lua/neorg_se/init.lua",
-            ["lua/neorg/modules/external/search"] = "./lua/neorg/modules/external/search/module.lua",
-        }
-    }
 }
