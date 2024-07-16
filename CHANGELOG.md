@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/benlubas/neorg-se/compare/v1.1.0...v1.1.1) (2024-07-16)
+
+
+### Bug Fixes
+
+* try copy lua files when installing rock ([b018ea4](https://github.com/benlubas/neorg-se/commit/b018ea4be046bd5eb7dda10050fa4b89c8d76604))
+
 ## [1.1.0](https://github.com/benlubas/neorg-se/compare/v1.0.1...v1.1.0) (2024-07-16)
 
 
