@@ -31,6 +31,6 @@ build = {
 
     modules = {
         -- Native library expected in `<target_path>/release/libmy_module.so` (linux; uses right name on macos/windows)
-        "neorg_se",
+        "libneorg_se",
     },
 }
