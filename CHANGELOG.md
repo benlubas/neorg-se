@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/benlubas/neorg-se/compare/v1.1.1...v1.1.2) (2024-07-16)
+
+
+### Bug Fixes
+
+* trigger CI ([0d11c59](https://github.com/benlubas/neorg-se/commit/0d11c59e01441dd1fa74c3fb8ac695840cfc2e4a))
+
 ## [1.1.1](https://github.com/benlubas/neorg-se/compare/v1.1.0...v1.1.1) (2024-07-16)
 
 
