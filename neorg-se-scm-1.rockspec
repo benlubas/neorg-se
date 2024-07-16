@@ -30,7 +30,7 @@ build = {
     type = "rust-mlua",
 
     modules = {
-        -- Native library expected in `<target_path>/release/libmy_module.so` (linux; uses right name on macos/windows)
-        "libneorg_se",
+        -- More complex case, native library expected in `<target_path>/release/libalt_name.so`
+        ["libneorg_se"] = "neorg_se",
     },
 }
