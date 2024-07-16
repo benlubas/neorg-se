@@ -18,6 +18,8 @@ all within Neovim.
 
 ## Install
 
+**You need the rust toolchain installed or this plugin will not build**
+
 <details>
   <summary>Lazy.nvim</summary>
 
