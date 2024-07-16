@@ -36,7 +36,7 @@ build = {
 
     modules = {
         ["libneorg_se"] = "neorg_se",
-    }
+    },
 
     copy_directories = $copy_directories,
 }
