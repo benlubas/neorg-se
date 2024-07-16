@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/benlubas/neorg-se/compare/v1.1.6...v1.1.7) (2024-07-16)
+
+
+### Bug Fixes
+
+* attempt to install lua/ as well ([91d26d9](https://github.com/benlubas/neorg-se/commit/91d26d93ec16efd79f5a48748513c516cc1cef6b))
+
 ## [1.1.6](https://github.com/benlubas/neorg-se/compare/v1.1.5...v1.1.6) (2024-07-16)
 
 
