@@ -1,8 +1,8 @@
 # neorg-se
 
 > [!WARNING]
-> This is a Work in Progress. Some things are working, but I'm still experimenting with this idea.
-> Everything is subject to change. Performance is meh at best.
+> This is a work in progress. Please pin your version and treat updating like installing a new
+> plugin until this warning is gone. Thanks!
 
 Search text file content via the [Tantivy](https://github.com/quickwit-oss/tantivy) search engine,
 all within Neovim.
@@ -18,7 +18,21 @@ all within Neovim.
 
 ## Install
 
-Install like normal, **you need to be using a package manger that supports luarocks!**
+<details>
+  <summary>Lazy.nvim</summary>
+
+Lazy's luarocks implementation is... special. it's unable to build the luarock unless you manually
+install `luarocks-build-rust-mlua` locally by running: `luarocks --local --lua-version 5.1 install
+luarocks-build-rust-mlua` before you attempt to install this plugin.
+
+After that, you can install like normal.
+</details>
+
+<details>
+  <summary>Rocks.nvim</summary>
+
+`:Rocks install neorg-se`
+</details>
 
 ```lua
 ["external.search"] = {
