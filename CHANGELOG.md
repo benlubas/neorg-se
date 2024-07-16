@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/benlubas/neorg-se/compare/v1.0.1...v1.1.0) (2024-07-16)
+
+
+### Features
+
+* luajit feature flag ([9467986](https://github.com/benlubas/neorg-se/commit/9467986666731f10cce764a29cf15ffc1eb5016d))
+
 ## [1.0.1](https://github.com/benlubas/neorg-se/compare/v1.0.0...v1.0.1) (2024-07-15)
 
 
