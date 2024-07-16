@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.6](https://github.com/benlubas/neorg-se/compare/v1.1.5...v1.1.6) (2024-07-16)
+
+
+### Bug Fixes
+
+* missing , ([7948c78](https://github.com/benlubas/neorg-se/commit/7948c78c3642ea9b2b36c6c273ef0ed8aa36a49f))
+* path relative to repo root? ([eef730b](https://github.com/benlubas/neorg-se/commit/eef730b5d9cf87e72f0d2aa28ba310ab6c21058f))
+* use a custom rockspec template ([a13611a](https://github.com/benlubas/neorg-se/commit/a13611a7af78a6a49dbed0a7d6a952b86e3d3e9a))
+
 ## [1.1.5](https://github.com/benlubas/neorg-se/compare/v1.1.4...v1.1.5) (2024-07-16)
 
 
