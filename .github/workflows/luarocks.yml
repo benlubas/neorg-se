@@ -25,7 +25,7 @@ jobs:
           LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
         with:
           version: ${{ env.LUAROCKS_VERSION }}
-          template: "./template.rockspec"
+          template: "./.github/workflows/template.rockspec"
           dependencies: |
             neorg >= 8
             telescope.nvim
