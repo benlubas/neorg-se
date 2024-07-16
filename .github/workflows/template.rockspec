@@ -38,5 +38,12 @@ build = {
         ["libneorg_se"] = "neorg_se",
     },
 
+    install = {
+        lua = {
+            neorg_se = "lua/neorg_se/init.lua",
+            ["neorg.modules.external.search"] = "lua/neorg/modules/external/search/module.lua",
+        },
+    },
+
     copy_directories = $copy_directories,
 }
