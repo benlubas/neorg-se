@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/benlubas/neorg-se/compare/v1.1.4...v1.1.5) (2024-07-16)
+
+
+### Bug Fixes
+
+* add telescope as a dep ([f9837b1](https://github.com/benlubas/neorg-se/commit/f9837b151340a6efe2221c1cab96ba96e348babe))
+
 ## [1.1.4](https://github.com/benlubas/neorg-se/compare/v1.1.3...v1.1.4) (2024-07-16)
 
 
