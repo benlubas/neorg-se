@@ -24,6 +24,7 @@ dependencies = {
     "neorg ~> 8",
     "lua >= 5.1",
     "luarocks-build-rust-mlua",
+    "telescope.nvim",
 }
 
 build = {
@@ -31,6 +32,9 @@ build = {
 
     modules = {
         -- More complex case, native library expected in `<target_path>/release/libalt_name.so`
-        ["libneorg_se"] = "neorg_se",
+        ["libneorg_se"] = "neorg_se", -- <-- the name of the lib cargo build produces without the leading "lib"
+        -- ^ the place the library ends up
+        -- So, this is will look for a library called "lib" .. "neorg_se" and place it at
+        -- ["libneorg_se"].
     },
 }
