@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.9](https://github.com/benlubas/neorg-se/compare/v1.1.8...v1.1.9) (2024-07-17)
+
+
+### Bug Fixes
+
+* location of installed lua file ([85fa327](https://github.com/benlubas/neorg-se/commit/85fa327f5afd0cdeaae61b768b18346594cd152c))
+
 ## [1.1.8](https://github.com/benlubas/neorg-se/compare/v1.1.7...v1.1.8) (2024-07-17)
 
 
