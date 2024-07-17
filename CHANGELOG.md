@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.8](https://github.com/benlubas/neorg-se/compare/v1.1.7...v1.1.8) (2024-07-17)
+
+
+### Bug Fixes
+
+* add build to generated rockspec ([b2025e1](https://github.com/benlubas/neorg-se/commit/b2025e16b1d422bad9fda85a31dea800289173a2))
+
 ## [1.1.7](https://github.com/benlubas/neorg-se/compare/v1.1.6...v1.1.7) (2024-07-16)
 
 
