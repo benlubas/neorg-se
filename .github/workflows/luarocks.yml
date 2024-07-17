@@ -30,3 +30,4 @@ jobs:
             neorg >= 8
             telescope.nvim
             lua ~> 5.1
+            luarocks-build-rust-mlua
