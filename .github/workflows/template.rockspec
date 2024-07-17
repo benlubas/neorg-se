@@ -40,8 +40,8 @@ build = {
 
     install = {
         lua = {
-            neorg_se = "lua/neorg_se/init.lua",
-            ["neorg.modules.external.search"] = "lua/neorg/modules/external/search/module.lua",
+            ["neorg_se.init"] = "lua/neorg_se/init.lua",
+            ["neorg.modules.external.search.module"] = "lua/neorg/modules/external/search/module.lua",
         },
     },
 
