@@ -45,13 +45,15 @@
               ln -fs ${luarc} .luarc.json
             '';
 
-          packages = with pkgs; [
-            lua-language-server
-            stylua
-            nil
-            lua5_1
-            libiconv-darwin # You only need this on Darwin systems
-          ];
+          packages =
+            with pkgs;
+            [
+              lua-language-server
+              stylua
+              nil
+              lua5_1
+            ]
+            ++ (pkgs.lib.optionals pkgs.stdenv.isDarwin [ libiconv-darwin ]);
         };
       }
     );
