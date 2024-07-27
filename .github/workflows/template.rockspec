@@ -18,6 +18,8 @@ description = {
 
 dependencies = $dependencies
 
+build_dependencies = $build_dependencies
+
 test_dependencies = $test_dependencies
 
 source = {
