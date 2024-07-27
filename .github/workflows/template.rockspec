@@ -18,7 +18,9 @@ description = {
 
 dependencies = $dependencies
 
-build_dependencies = $build_dependencies
+build_dependencies = {
+  'luarocks-build-rust-mlua',
+}
 
 test_dependencies = $test_dependencies
 
