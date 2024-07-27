@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.10](https://github.com/benlubas/neorg-se/compare/v1.1.9...v1.1.10) (2024-07-27)
+
+
+### Bug Fixes
+
+* **build:** specify build dependencies ([c86f1d4](https://github.com/benlubas/neorg-se/commit/c86f1d4360ee8fcc5f76ada1849ee3291b2ba9c2))
+* **build:** specify build dependencies in template ([f7c4284](https://github.com/benlubas/neorg-se/commit/f7c4284be2d75c10c3b465332908929ba3e0061b))
+* **flake:** load libiconv-darwin only on darwin systems ([0a2d361](https://github.com/benlubas/neorg-se/commit/0a2d361afe624c1881ba2a65a755dc2e46394de9))
+* use build_dependencies for build backend ([e38f17b](https://github.com/benlubas/neorg-se/commit/e38f17b6053c9833b62cd080014b4d0174cf3a84))
+
 ## [1.1.9](https://github.com/benlubas/neorg-se/compare/v1.1.8...v1.1.9) (2024-07-17)
 
 
