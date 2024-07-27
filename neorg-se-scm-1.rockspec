@@ -23,8 +23,11 @@ end
 dependencies = {
     "neorg ~> 8",
     "lua >= 5.1",
-    "luarocks-build-rust-mlua",
     "telescope.nvim",
+}
+
+build_dependencies = {
+  "luarocks-build-rust-mlua",
 }
 
 build = {
