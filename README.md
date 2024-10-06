@@ -23,11 +23,10 @@ all within Neovim.
 <details>
   <summary>Lazy.nvim</summary>
 
-Lazy's luarocks implementation is unable to build the luarock unless you manually
-install `luarocks-build-rust-mlua` locally by running: `luarocks --local --lua-version 5.1 install
-luarocks-build-rust-mlua` before you attempt to install this plugin.
-
-After that, you can install like normal.
+Can be listed as a dependency of `"nvim-neorg/neorg"`
+```lua
+{ "benlubas/neorg-se" }
+```
 </details>
 
 <details>
