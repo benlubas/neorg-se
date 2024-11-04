@@ -11,8 +11,8 @@ all within Neovim.
 
 ## Commands
 
--   `Neorg search index` - Create the search engine index for the current workspace. Must be run each
-    time you launch nvim before you can run a query (WIP like I said)
+-   `Neorg search index` - Create the search engine index for the current workspace. This command is auto run in a separate
+    thread when you load the plugin. It does not yet automatically update (WIP, and all that)
 -   `Neorg search query fulltext` - "normal" search. Searches body text, title, and categories
 -   `Neorg search query categories` - search for all files tagged with one or more categories
 
